@@ -220,8 +220,8 @@ func expensiveBlowfishSetup(key []byte, cost uint32, salt []byte) (*blowfish.Cip
 		return nil, err
 	}
 
-	// Bug compatibility with C bcrypt implementations. They use the trailing
-	// NULL in the key string during expansion.
+	// Append a NULL delimiter because blowfish keys are repeated to fill a 72
+	// byte buffer. This prevents "password" == "passwordpassword".
 	// We copy the key to prevent changing the underlying array.
 	ckey := append(key[:len(key):len(key)], 0)
 
